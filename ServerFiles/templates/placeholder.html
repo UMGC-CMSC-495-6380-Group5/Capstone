@@ -8,5 +8,14 @@
 </head>
 <body>
     This is a placeholder page.
+    
+    <!-- A variable is accessed using double braces-->
+    <p>{{test}}</p>
+    <p>{{a_number}}</p>
+    
+    <!-- A code block is represented by a brace then a percent -->
+    {% for item in loopable_list %}
+    <p>{{item}}</p>
+    {% endfor %}
 </body>
 </html>

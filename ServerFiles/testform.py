@@ -6,6 +6,6 @@ class TestForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), 
                                                 Length(min=2, max=20)])
     email = StringField("Email Address", validators=[DataRequired(), Email()])
-    password = PasswordField("Password", validators=[DataRequired(), EqualTo('password')])
-    confirm_password = PasswordField("Confirm Password")
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=2, max=10)])
+    confirm_password = PasswordField("Confirm Password", validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField("Submit Data")

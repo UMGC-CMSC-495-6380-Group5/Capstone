@@ -4,7 +4,7 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host ="oyd-database.ckc4mk1cvfc5.us-east-1.rds.amazonaws.com",
     user="admin",
-    password="databaseadmin"
+    password="Group5RDS"
     )
 
 #Example of executing a parameterized call

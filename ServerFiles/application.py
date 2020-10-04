@@ -4,8 +4,8 @@ from testform import TestForm
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] ='12345'
-    
-@app.route('/')
+  
+@app.route('/placeholder')
 def placeholder():
     my_variable = "This is a test string that will be passed to the HTML template"
     my_list = ["This", "is", "a", "list", "of", "strings"]
@@ -20,7 +20,7 @@ def test():
 
 
 
-@app.route('/login')
+@app.route('/')
 def login():
     return render_template('login.html')
 

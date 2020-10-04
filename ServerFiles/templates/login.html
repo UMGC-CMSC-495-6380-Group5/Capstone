@@ -17,18 +17,18 @@ DATE 			TEAM MEMBER 	UPDATE
 <form name="loginform" method="POST" action="">	
 	<table border="1" width="51%" id="authtable">
 		<tr>
-			<td><img src="belt.jpg" class="resize"></td>
+			<td><img src="./belt.jpg" class="resize"></td>
 			<td>
 				<h4>Sign in with your account: </h4>
 				<hr/>
 				<table border="0" width="100%" cellpadding="0" id="authtableinner">			
 					<tr>
 						<td width="157">Username:</td>
-						<td><input type="text" name="formuser" size="30"></td>
+						<td><input type="text" name="formuser" size="30" value="{{request.form.username }}"></td>
 					</tr>
 					<tr>
 						<td width="157">Password:</td>
-						<td><input type="password" name="formpass" size="30"></td>
+						<td><input type="password" name="formpass" size="30" value="{{request.form.password }}"></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -39,6 +39,9 @@ DATE 			TEAM MEMBER 	UPDATE
 		</tr>
 	</table>					
 </form>
+{% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
 </div>
 </body>
 </html>

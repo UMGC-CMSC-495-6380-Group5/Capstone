@@ -6,7 +6,7 @@ DATE 			TEAM MEMBER 	UPDATE
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" type="text/css" href="layout.css">   
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/layout.css') }}">   
   <title>Martial Arts Class Management</title>
 </head>
 
@@ -17,7 +17,7 @@ DATE 			TEAM MEMBER 	UPDATE
 <form name="loginform" method="POST" action="">	
 	<table border="1" width="51%" id="authtable">
 		<tr>
-			<td><img src="./belt.jpg" class="resize"></td>
+			<td><img src="{{ url_for('static',filename='images/belt.jpg') }}" class="resize"></td>
 			<td>
 				<h4>Sign in with your account: </h4>
 				<hr/>

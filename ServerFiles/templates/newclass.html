@@ -1,0 +1,59 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+//		 		TFEITOSA		Created layout.html file
+10/05/2020 		NCROWN 			Updated to include revision table
+
+
+-->
+
+{% extends "layout.html" %}
+{% block content %}
+
+<form name="new_class" action="" method="POST">
+	<table>
+		 <caption  style="height:40px;">
+			 <span>New Class</span>
+		 </caption>
+		 <tr>
+			 <td class="label"><p>Class Name</p></td>
+			 <td class="field"><input name="class_name" type="text"></td>
+			 <td></td>
+			 <td>Attending:</td>
+		</tr>
+		 <tr>
+			 <td class="label"><p>Date:</p></td>
+			 <td class="field"><input name="date" type="text"></td>
+			 <td></td>
+			 <td rowspan="4"><textarea id="attendance"></textarea></td>
+		 </tr>
+		 <tr>
+			 <td class="label"><p>Starting Time:</p></td>
+			 <td class="field"><input name="starttime" type="text"></td>
+		 </tr>
+		 <tr>
+			 <td class="label"><p>Ending Time:</p></td>
+			 <td class="field"><input name="endtime" type="text"></td>
+		 </tr>
+		 <tr>
+			 <td class="label"><p>Students:</p></td>
+			 <td class="field"><input name="students" type="text"></td>
+			 <td><input onclick="" type="button" class="button" value="Add" /></td>
+		 </tr>
+		<tr>
+			<td class="label"><p>Instructors:</p></td>
+			<td class="field"><input name="instructors" type="text"></td>
+			<td><input onclick="" type="button" class="button" value="Add" /></td>
+			<td><textarea id="instructors"></textarea></td>
+		</tr>
+		 <tr>
+			<td></td>
+			<td><input onclick="this.form.reset()" type="button" class="button" value="Clear" /></td>
+			<td></td>
+			<td><input type="submit" class="button" value="Create" /></td>
+		</tr>
+  	</table>
+</form>
+<br>
+<p>{{ message }}</p>
+		
+{% endblock content %}

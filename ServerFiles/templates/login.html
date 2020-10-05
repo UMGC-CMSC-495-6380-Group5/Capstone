@@ -1,6 +1,10 @@
 <!--
 DATE 			TEAM MEMBER 	UPDATE
 09/29/2020 		NCROWN 			Created login.html file
+10/03/2020 		NCROWN 			Updated to work with application.py
+10/04/2020 		NCROWN  		Updated to properly function with authenticate() in application.py,
+								Added maxlength, pattern, and title properties to inputs
+
 -->
 <html>
 
@@ -24,11 +28,11 @@ DATE 			TEAM MEMBER 	UPDATE
 				<table border="0" width="100%" cellpadding="0" id="authtableinner">			
 					<tr>
 						<td width="157">Username:</td>
-						<td><input type="text" name="formuser" size="30" value="{{request.form.username }}"></td>
+						<td><input type="text" name="formuser" size="30" maxlength="30" pattern="[A-Za-z0-9]+" title="Only letters and number allowed" value=""></td>
 					</tr>
 					<tr>
 						<td width="157">Password:</td>
-						<td><input type="password" name="formpass" size="30" value="{{request.form.password }}"></td>
+						<td><input type="password" name="formpass" size="30" maxlength="30" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed" value=""></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -41,6 +45,9 @@ DATE 			TEAM MEMBER 	UPDATE
 </form>
 {% if error %}
     <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
+{% if message %}
+    <p>{{ message }}</p>
 {% endif %}
 </div>
 </body>

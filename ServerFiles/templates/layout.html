@@ -1,3 +1,11 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+//		 		TFEITOSA		Created layout.html file
+10/03/2020 		NCROWN 			Updated to include logout button and revision table
+
+
+-->
+
 <!DOCTYPE html>
 
 <html>
@@ -5,17 +13,40 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        
-        <title>Oom Yang Doe</title>
+        <link rel="stylesheet" href="static/styles/style.css" />
+        <title>Oom Yung Doe</title>
     </head>
     <body>
         <div class="container">
             <div class="menu">
-                <h1>Menu</h1>
+                <div class="logo">
+					<img src={{ url_for('static',filename='images/logob.png') }} name="logo" id="logo">
+				</div>
+				<div class="dropdown">
+					<button class="dropbtn"><a href="calendar">Calendar</a></button>
+				</div>
+				<div class="dropdown">
+					<button class="dropbtn">Accounts</button>
+					<div class="dropdown-content">
+					  	<a href="#">New</a>
+					  	<input type="text" placeholder="Search...">
+					</div>
+				</div>
+				<div class="dropdown">
+					<button class="dropbtn">Class</button>
+					<div class="dropdown-content">
+					  	<a href="newclass">New</a>
+					  	<input type="text" placeholder="Search...">
+					</div>
+				</div>
+				<div class="dropdown">
+					<button class="dropbtn"><a href="logout">Logout</a></button>
+				</div>
             </div>
-        
-            {% block content %}
-            {% endblock content %}    
+        	<div class="content">
+				{% block content %}
+				{% endblock content %}    
+			</div>
         </div>
         
     </body>

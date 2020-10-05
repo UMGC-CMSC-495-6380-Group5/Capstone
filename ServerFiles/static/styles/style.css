@@ -1,0 +1,173 @@
+/*
+DATE 			TEAM MEMBER    	UPDATE
+//				TFEITOSA 		Created style.css
+09/29/2020    	NCROWN         	Updated to include revision table
+
+*/
+
+body {
+	font-family: Helvetica;
+}
+
+.container {
+	width: 90%;
+	min-width: 640px;
+	margin: 0 auto;
+	min-height: 720px;
+	overflow: visible;
+	padding-bottom: 24px;
+	background: #fff;
+}
+
+/* Menu Styles */
+
+.menu {
+	background: #000;
+	margin-bottom: 30px;
+
+}
+
+ /* Dropdown Button */
+.dropbtn {
+  	background-color: #c33;
+  	color: white;
+	width: 140px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	margin-left: 12px;
+  	font-size: 22px;
+  	
+}
+
+.dropbtn a {
+	color: white;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  	position: relative;
+  	display: inline-block;
+	height: 128px;
+	
+}
+
+.logo {
+	position: relative;
+	float: left;
+}
+
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f1f1f1;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a, input, img {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #000;} 
+
+/* Content */
+
+.content {
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+/* General Tables */
+
+table{
+	width: 100%;
+	margin: 0 auto;
+	
+	
+}
+
+th {
+    border: 1px solid black;
+}
+
+.label {
+    text-align: right;
+    width: 120px;
+}
+
+.field {
+    width: 300px;
+}
+
+.field input {
+    width: 300px;
+}
+
+#attendance {
+    height: 360px;
+}
+
+#calendar {
+	width: 70%;
+	float: left;
+	min-height: 720;
+	background: #ccc;
+	position: relative;
+
+	
+}
+
+#day {
+	width: 30%;
+	float: right;
+	min-height: 720;
+	background: #faa;
+	position: relative;
+}
+
+#calendar_table {
+	width: 100%;
+}
+
+#calendar_table caption {
+	background: #c33;
+}
+
+#year {
+	width: 100%;
+	font-size: 2em;
+}
+
+#month {
+	font-size: 3em;
+}
+
+#left_arrow {
+	margin-right: 2em;
+	font-size: 3em;
+	
+}
+#right_arrow {
+	margin-left: 2em;
+	font-size: 3em;
+	
+}
+
+#calendar_content {
+	text-align: center;
+}

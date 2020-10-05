@@ -1,23 +1,110 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+//		 		TFEITOSA		Created calendar.html file
+10/05/2020 		NCROWN 			Updated to include revision table
+
+
+-->
+
 {% extends "layout.html" %}
 {% block content %}
     
-    <div class="calendar">
-        <div class="stats">
-            <h3>Total/New/Drops</h3>
-        </div>
-        <div class="month_container">
-            <nav>
-                <span id="prev" class="prev"></span>
-                <span id="next" class="next"></span>
-            </nav>
-            <h2 class="month"></h2>
-            <h3 class="year"></h3>
-        </div>
-        <div class="calendar_body">
-            
-        </div>
-        <div class="day">
-            
-        </div>
+        
+<div id="calendar">
+    
+    <div class="stats">
+        <h3>Total/New/Drops</h3>
     </div>
+    
+	<table id="calendar_table">
+		<caption>
+			<span id="year">Year</span>
+			<br>
+			<span id="left_arrow">&lt</span>
+			<span id="month">Month</span>
+			<span id="right_arrow">&gt</span>
+		</caption>
+		<thead>
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>	
+		</thead>
+		<tbody id="calendar_content">
+			<tr>
+				<td id="box1"></td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>9</td>
+				<td>0</td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>9</td>
+				<td>0</td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>9</td>
+				<td>0</td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>9</td>
+				<td>0</td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>9</td>
+				<td>0</td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			
+		</tbody>
+	</table>
+</div>
+	
+<div id="day">
+	<h1>14</h1>
+	<table>
+		<tr>9:00AM Sum</tr>
+		<tr>1:00PM Yang</tr>
+		<tr>5:00PM Darnell</tr>
+		<tr>7:00PM Chris</tr>
+	</table>
+</div>
+
+        
+        
 {% endblock content %}

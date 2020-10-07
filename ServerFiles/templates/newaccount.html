@@ -1,0 +1,142 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+10/05/2020 		NCROWN 			Created newaccount.html file
+10/06/2020 		NCROWN 			Updated newaccount.html to include javascript for dynamic disabling of fields and id/patterns/titles on input fields; Belt list option table working
+10/06/2020 		NCROWN 			Added javascript to handle password box confirmation handling
+-->
+{% extends "layout.html" %}
+{% block content %}
+
+<form name="new_account" action="" method="POST">
+	<table>
+		<caption  style="height:40px;">
+			<span>New Account</span>
+		</caption>
+		<tr>
+			<td class="label"><p>First Name:</p></td>
+			<td class="field"><input name="first_name" id="first_name" type="text" pattern="[A-Za-z0-9]+" title="Only letters and number allowed" required></td>
+			<td class="label"><p>Instructor:</p></td>
+			<td class="field"><input name="instructor" id="instructorCheckbox" type="checkbox" onclick="enableUserFields()"></td>
+			<script>
+				document.getElementById('instructorCheckbox').onchange = function() {
+					 document.getElementById('usernameInput').disabled = !this.checked;
+					 document.getElementById('passInput').disabled = !this.checked;
+					 document.getElementById('pass2Input').disabled = !this.checked;
+					 document.getElementById('usernameInput').required = this.checked;
+					 document.getElementById('passInput').required = this.checked;
+					 document.getElementById('pass2Input').required = this.checked;
+				};
+			</script>
+		</tr>
+		<tr>
+			<td class="label"><p>Last Name:</p></td>
+			<td class="field"><input name="last_name" id="last_name" type="text" pattern="[A-Za-z]+" title="Only letters allowed" required></td>
+			<td class="label"><p>Username:</p></td>
+			<td class="field"><input name="username" id="usernameInput" type="text" pattern="[A-Za-z]+" title="Only letters" disabled></td>
+		</tr>
+		<tr>
+			<td class="label"><p>Address:</p></td>
+			<td class="field"><input name="address" id="address" type="text" pattern="[A-Za-z0-9. ]+" title="Only letters, numbers, and . allowed"></td>
+			<td class="label"><p>Password:</p></td>
+			<td class="field"><input name="password" id="passInput" type="password" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed" disabled></td>
+		</tr>
+		<tr>
+			<td class="label"><p>Phone:</p></td>
+			<td class="field"><input name="phone" id="phone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890"title="Only numbers and - allowed" required></td>
+			<td class="label"><p>Password Confirmation:</p></td>
+			<td class="field"><input name="password2" id="pass2Input" type="password" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed" disabled></td>
+			<script>
+				document.getElementById('pass2Input').addEventListener('input', function() {
+    				var input = document.getElementById('passInput');
+    				var input2 = document.getElementById('pass2Input');
+					if (input.value != input2.value){
+						document.getElementById('passwordmatching').textContent = "Passwords do not match";
+						document.getElementById('submitbutton').disabled = true;
+					} else {
+						document.getElementById('passwordmatching').textContent = "";
+						document.getElementById('submitbutton').disabled = false;
+					}
+				});
+			</script>
+		</tr>
+		<tr>
+			<td class="label"><p>Email:</p></td>
+			<td class="field"><input name="email" id="email" type="email"></td>
+			<td></td>
+			<td><p id="passwordmatching"></p></td>
+		</tr>
+		<tr>
+			<td class="label"><p>Date of Birth:</p></td>
+			<td class="field"><input name="birthday" id="birthday" type="date" required></td>
+			<script>
+				// Handles checking if over the age of 18
+				document.getElementById('birthday').addEventListener('change', function() {
+    				var input = this.valueAsDate;		
+					var today = new Date();
+					var offset = today.getTimezoneOffset();
+					// Corrects input variable for correct date due to javascript wonkiness with UTC
+					var correctedInput = new Date(input.getTime() + offset*60000);
+					var age = today.getFullYear() - correctedInput.getFullYear();
+					// Date comparisons for age
+					if (age == 18) {
+						if (today.getMonth() < correctedInput.getMonth()) {
+							age--;
+						} else if (today.getMonth() == correctedInput.getMonth()) {
+							if (today.getDate() < correctedInput.getDate()) {
+								age--;
+							}
+						}
+					}
+					// Code to disable parent input
+					if (age < 18) {
+						document.getElementById('parent').disabled = false;
+						document.getElementById('parent').required = true;
+					} else {
+						document.getElementById('parent').disabled = true;
+						document.getElementById('parent').required = false;
+					}
+						
+				});
+			</script>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="label"><p>Parent:</p></td>
+			<td class="field"><input name="parent" id="parent" type="text" pattern="[A-Za-z]+" title="Only letters allowed" disabled></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="label"><p>Notes:</p></td>
+			<td class="field"><input name="notes" id="notes" type="text" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed"></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="label"><p>Belt:</p></td>
+			<td class="field"><SELECT name="belt" id="belt">
+				{% for b in beltList %}
+					<OPTION value="{{b.0}}">{{b.1}}</OPTION>
+				{% endfor %}
+			</SELECT></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input name="resetbutton" onclick="this.form.reset()" id="resetbutton" type="button" class="button" value="Clear" /></td>
+			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Create" /></td>
+			<td></td>
+		</tr>
+  	</table>
+</form>
+<br>
+{% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+		
+{% endblock content %}

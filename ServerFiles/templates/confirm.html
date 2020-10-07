@@ -1,0 +1,32 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+10/06/2020 		NCROWN 			Created confirm.html file
+
+-->
+{% extends "layout.html" %}
+{% block content %}
+
+<form name="confirm" action="" method="POST">
+	<table>
+		<caption  style="height:40px;">
+			<span>Please confirm to continue</span>
+		</caption>
+		<tr>
+			{% if message %}
+            <p>{{ message }}</p>
+            {% endif %}
+		</tr>
+		<tr>
+			<td></td>
+			<td><input name="confirmbutton"  id="confirmbutton" type="submit" class="button" value="Yes" /></td>
+			<td><input name="denybutton" id="denybutton" type="submit" class="button" value="No" /></td>
+			<td></td>
+		</tr>
+  	</table>
+</form>
+<br>
+{% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
+
+{% endblock content %}

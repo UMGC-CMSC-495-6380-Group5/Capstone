@@ -10,7 +10,7 @@ DATE 			TEAM MEMBER 	UPDATE
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/layout.css') }}">   
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/login.css') }}">   
   <title>Martial Arts Class Management</title>
 </head>
 
@@ -28,15 +28,15 @@ DATE 			TEAM MEMBER 	UPDATE
 				<table border="0" width="100%" cellpadding="0" id="authtableinner">			
 					<tr>
 						<td width="157">Username:</td>
-						<td><input type="text" name="formuser" size="30" maxlength="30" pattern="[A-Za-z0-9]+" title="Only letters and number allowed" value=""></td>
+						<td><input type="text" name="formuser" id="formuser" size="30" maxlength="30" pattern="[A-Za-z0-9]+" title="Only letters and number allowed" value=""></td>
 					</tr>
 					<tr>
 						<td width="157">Password:</td>
-						<td><input type="password" name="formpass" size="30" maxlength="30" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed" value=""></td>
+						<td><input type="password" name="formpass" id="formpass" size="30" maxlength="30" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed" value=""></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td><input type="submit" value="Sign In" name="signinbutton" class="button"></td>
+						<td><input type="submit" name="signinbutton" id="signinbutton" value="Sign In" class="button"></td>
 					</tr>
 				</table>
 			</td>

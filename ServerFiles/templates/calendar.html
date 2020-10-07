@@ -13,15 +13,27 @@ DATE 			TEAM MEMBER 	UPDATE
 <div id="calendar">
     
     <div class="stats">
-        <h3>Total/New/Drops</h3>
+    	<table>
+    		<tr>
+    			<td><h1>Total</h1></td>
+    			<td><h1>New</h1></td>
+    			<td><h1>Drops</h1></td>
+    		</tr>
+    		<tr>
+    			<td>{{ total_accounts }}</td>
+    			<td></td>
+    			<td></td>
+    		</tr>
+    	
+    	</table>	
     </div>
     
 	<table id="calendar_table">
 		<caption>
-			<span id="year">Year</span>
+			<span id="year">{{ year }}</span>
 			<br>
 			<span id="left_arrow">&lt</span>
-			<span id="month">Month</span>
+			<span id="month">{{ month_name }}</span>
 			<span id="right_arrow">&gt</span>
 		</caption>
 		<thead>
@@ -36,72 +48,47 @@ DATE 			TEAM MEMBER 	UPDATE
 			</tr>	
 		</thead>
 		<tbody id="calendar_content">
+			
+			{% for r in range(6) %}
 			<tr>
-				<td id="box1"></td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-				<td>5</td>
-				<td>6</td>
-				<td>7</td>
+				{% for c in range(7) %}
+					{% if r == 0 and c <= weekday %}
+						<td><p></p></td>
+					{% elif r == 0 and c >= weekday %}
+						<td><p>{{ c - weekday }}</p></td>
+					{% else %}
+						{% if c + r * 7 - weekday <= days_in_month %}
+						<td><p>{{ c + (r * 7) - weekday }}</p></td>
+						{% endif %}
+					{% endif %}
+				{% endfor %}
 			</tr>
-			<tr>
-				<td>8</td>
-				<td>9</td>
-				<td>0</td>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-			</tr>
-			<tr>
-				<td>8</td>
-				<td>9</td>
-				<td>0</td>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-			</tr>
-			<tr>
-				<td>8</td>
-				<td>9</td>
-				<td>0</td>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-			</tr>
-			<tr>
-				<td>8</td>
-				<td>9</td>
-				<td>0</td>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-			</tr>
-			<tr>
-				<td>8</td>
-				<td>9</td>
-				<td>0</td>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
-			</tr>
+			{% endfor %}
 			
 		</tbody>
 	</table>
 </div>
 	
 <div id="day">
-	<h1>14</h1>
+	<h1>{{ day }}</h1>
 	<table>
-		<tr>9:00AM Sum</tr>
-		<tr>1:00PM Yang</tr>
-		<tr>5:00PM Darnell</tr>
-		<tr>7:00PM Chris</tr>
+		{% for class in all_classes %}
+			<tr>
+				<td>{{ class[1] }}</td>
+			</tr>
+		{% endfor %}
+		<tr>
+			<td>9:00AM Sum</td>
+		</tr>
+		<tr>
+			<td>1:00PM Yang</td>
+		</tr>
+		<tr>
+			<td>5:00PM Darnell</td>
+		</tr>
+		<tr>
+			<td>7:00PM Chris</td>
+		</tr>
 	</table>
 </div>
 

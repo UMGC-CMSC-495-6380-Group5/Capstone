@@ -11,8 +11,9 @@ body {
 
 .container {
 	width: 90%;
-	min-width: 640px;
-	margin: 0 auto;
+	min-width: 720px;
+	margin-right: auto;
+	margin-left: auto;
 	min-height: 720px;
 	overflow: visible;
 	padding-bottom: 24px;
@@ -22,6 +23,10 @@ body {
 /* Menu Styles */
 
 .menu {
+	max-width: 100%;
+	margin-right: auto;
+	margin-left: auto;
+	min-width:1000px;
 	background: #000;
 	margin-bottom: 30px;
 
@@ -129,15 +134,21 @@ th {
 	background: #ccc;
 	position: relative;
 
-	
+}
+
+.stats {
+	text-align: center;
+	padding-bottom: 10px;
 }
 
 #day {
-	width: 30%;
-	float: right;
+	
+	float: left;
 	min-height: 720;
 	background: #faa;
 	position: relative;
+	padding-left: 30px;
+	padding-right: 60px;
 }
 
 #calendar_table {

@@ -10,14 +10,13 @@
 #10/06/2020     NCROWN              Added error handling for database connection error to authenticate(); Added form support for newaccount; implemented passHash() and DisconnectDB(); added backend for confirm.html
 #10/07/2020     NCROWN              Fixed errors on backend of confirm() function for passing empty tuples by using global variables
 #10/07/2020     NCROWN              Implemented tuplebuilder functions; continued development on confirm() function
-#10/08/2020     NCROWN              Implemented SHA256 password encryption, completed confirm()/newaccount() functionality; updated newclass to interact with confirm() functionality
+#10/08/2020     NCROWN              Implemented SHA256 password encryption, completed confirm()/newaccount() functionality; updated newclass to interact with confirm() functionality; completed newclass() functionality
 
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 #from testform import TestForm
 from app_calendar import *
 from database_connector import ConnectDB, DisconnectDB
-from datetime import timedelta, time, date
-from dateutil.parser import parse
+from datetime import timedelta, date
 from passwordhashgen import passHash, passCompare
 from tuplebuilder import accountTuple, outputBelt, accountQuery, timeBuilder
 
@@ -161,6 +160,7 @@ def newaccount():
                 password = request.form.get('password')
                 #Sets boolean/integer values
                 userStatus = 1
+                #Handles instructor checkbox value and rogue username/password entry
                 if instructor == None:
                     instructor = 0
                     username = None
@@ -168,8 +168,9 @@ def newaccount():
                 else:
                     instructor = 1
                     password = passHash(password)
+                #Converts beltDB string to int
                 belt = outputBelt(beltDB)
-                #Base query constuction
+                #Query tuple constuction
                 global queryTuple
                 queryTuple = accountTuple(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password)
                 #final query construction
@@ -180,9 +181,12 @@ def newaccount():
                 result = mycursor.fetchall()
                 #Compares query results to current form data
                 if result is None:
+                    #Submits data into database
                     mycursor.execute(query, queryTuple)
                     mydb.commit()
+                    #Flash message passed to next page load
                     flash('Record added.', 'succes')
+                    #Clear globals
                     query = ''
                     queryTuple = ''
                     return redirect(url_for('newaccount'))
@@ -190,13 +194,18 @@ def newaccount():
                 else:
                     #First name found in database, asks user to confirm creation of new account
                     if (any(firstName in i for i in result)):
+                        #Builds name string
                         name = firstName + ' ' + lastName
+                        #redirect to confirm() with variables
                         return redirect(url_for('confirm', name=name, page='newaccount'))
                     #Unique name
                     else:
+                        #submits data into database
                         mycursor.execute(query, queryTuple)
                         mydb.commit()
+                        #Flash message passed to next page load
                         flash('Record added.', 'succes')
+                        #Clear globals
                         query = ''
                         queryTuple = ''
                         return redirect(url_for('newaccount'))
@@ -210,36 +219,49 @@ def newaccount():
 #Confirmation handling
 @app.route('/confirm/<name>/<page>', methods = ['GET', 'POST'])
 def confirm(name, page):
-    #global query
+    #Calls global query
     confirmQuery = globals()['query']
     error = ''
     #Session good
     if "instructor" in session:
-        #redirect
+        #If the query is empty, redirects back to the calendar
         if confirmQuery == None:
             redirect(url_for('show_calendar'))
-        #Session good
+        #Good path
         else:
+            #Get global queryTuple
             confirmQueryTuple = globals()['queryTuple']
+            #Good path
             try:
                 mydb = ConnectDB()
                 mycursor = mydb.cursor()
+                #Constructs message for display on the confirm.html page
                 message = 'There is already a database entry for ' + name + ". Do you wish to create a new record anyway?"
+                #Button press
                 if request.method == 'POST':
+                    #Calls globals for clearing
                     global query
                     global queryTuple
+                    #Handles confim button
                     if 'confirmbutton' in request.form:
+                        #Insert query/tuple into database
                         mycursor.execute(confirmQuery, confirmQueryTuple)
                         mydb.commit()
+                        #Pass flash message to next page
                         flash('Record added.', 'succes')
+                        #Reset globals
                         query = ''
                         queryTuple = ''
                         return redirect(url_for(page))
+                    #Handles deny button
                     elif 'denybutton' in request.form:
+                        #Pass flash message to next page
                         flash('Canclled record upload.', 'succes') 
+                        #Reset globals
                         query = ''
                         queryTuple = ''
                         return redirect(url_for(page))
+            #Handles errors
             except:
                 error = 'Database error'
     #Session bad
@@ -253,52 +275,66 @@ def newclass():
     #Session good
     if "instructor" in session:
         error = ''
+        #Build lists for select options in newclass.html
         hourList = ["00", "01", "02", "03", "04" , "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"]
         minuteList = ["00", "15", "30", "45"]
         if request.method == "POST":
+            #Get values from newclass.html form
             class_name = request.form.get('class_name')
             date = request.form.get('date')
             start_hour = request.form.get('starthour')
             end_hour = request.form.get('endhour')
             start_minute = request.form.get('startminute')
             end_minute = request.form.get('endminute')
-            #Send time to string builder
+            
+            #Send times to timeBuilder to construct time strings
             start_time = timeBuilder(start_hour, start_minute)
             end_time = timeBuilder(end_hour, end_minute)
+            
+            #Update query and queryTuple global variables to facilitate confirm()
             global query
             query = "INSERT INTO Classes (ClassName, ClassDate, ClassStartTime, ClassEndTime) VALUES (%s, %s, %s, %s)"
             global queryTuple
             queryTuple = (class_name, date, start_time, end_time)
             
+            #Good path
             try: 
                 mydb = ConnectDB()
                 mycursor = mydb.cursor()
+                #Query database to see if class exists in this time/date slot
                 mycursor.execute("SELECT ClassStartTime FROM Classes WHERE ClassDate = %s", (date,))
                 result = mycursor.fetchall()
-                for i in result:
-                    print(i)
                 #Compares query results to current form data
                 if result is None:
+                    #Submits data into database
                     mycursor.execute(query, queryTuple)
                     mydb.commit()
+                    #Flash message for next page laod
                     flash('Record added.', 'succes')
+                    #Clear globals
                     query = ''
                     queryTuple = ''
                     return redirect(url_for('newclass'))
-                #Last name found in database
+                #Date found in database
                 else:
-                    #First name found in database, asks user to confirm creation of new account
+                    #Time and date found in database, asks user to confirm creation of new class
                     if (any(start_time in i for i in result)):
+                        #Builds name string
                         name = "class starting at " + start_time + " on " + date
+                        #Redirects to confirm() with variables
                         return redirect(url_for('confirm', name=name, page='newclass'))
-                    #Unique name
+                    #Unique class
                     else:
+                        #Submits data into database
                         mycursor.execute(query, queryTuple)
                         mydb.commit()
+                        #Flash message for next page load
                         flash('Record added.', 'succes')
+                        #Clear globals
                         query = ''
                         queryTuple = ''
                         return redirect(url_for('newaccount'))
+            #Handles errors
             except:
                 error = 'Database error'
     #Session bad

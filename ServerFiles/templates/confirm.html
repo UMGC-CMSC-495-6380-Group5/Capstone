@@ -1,16 +1,20 @@
 <!--
 DATE 			TEAM MEMBER 	UPDATE
 10/06/2020 		NCROWN 			Created confirm.html file
-
+10/07/2020 		NCROWN 			Updated confirm.html appearance
 -->
-{% extends "layout.html" %}
-{% block content %}
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/login.css') }}">   
+  <title>Martial Arts Class Management</title>
+</head>
+<body>
+<div>
+<h3>Please confirm to continue</h3>
+
 
 <form name="confirm" action="" method="POST">
 	<table>
-		<caption  style="height:40px;">
-			<span>Please confirm to continue</span>
-		</caption>
 		<tr>
 			{% if message %}
             <p>{{ message }}</p>
@@ -28,5 +32,6 @@ DATE 			TEAM MEMBER 	UPDATE
 {% if error %}
     <p class="error"><strong>Error:</strong> {{ error }}
 {% endif %}
-
-{% endblock content %}
+</div>
+</body>
+</html>

@@ -8,14 +8,34 @@
 #10/05/2020     NCROWN              Added addaccount, Added sessioncount function and related code to login function to prevent excessive login attempts
 #10/05/2020     TFEITOSA            Created show_calendar() function for the calendar interface
 #10/06/2020     NCROWN              Added error handling for database connection error to authenticate(); Added form support for newaccount; implemented passHash() and DisconnectDB(); added backend for confirm.html
+#10/07/2020     NCROWN              Fixed errors on backend of confirm() function for passing empty tuples by using global variables
+#10/07/2020     NCROWN              Implemented tuplebuilder functions; continued development on confirm() function
 
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 #from testform import TestForm
 from app_calendar import *
 from database_connector import ConnectDB, DisconnectDB
 from datetime import timedelta
 from datetime import date
 from passwordhashgen import passHash
+from tuplebuilder import outputTuple, outputBelt, outputQuery
+
+#global variables
+firstName = ''
+lastName = ''
+phone = ''
+instructor = ''
+birthdate = ''
+belt = 1
+userStatus = 1
+email = ''
+parent = ''
+notes = ''
+address = ''
+username = ''
+password = ''
+instructor = 0
+query = ''
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] ='12345'
@@ -141,104 +161,145 @@ def newaccount():
         #DisconnectDB(mycursor, mydb)
         if request.method == 'POST':
             #Imports form data from newaccount.html
-            firstName = request.form.get('first_name') 
+            global firstName
+            firstName = request.form.get('first_name')
+            global lastName
             lastName = request.form.get('last_name')
+            global address
             address = request.form.get('address') 
+            global phone
             phone = request.form.get('phone')
+            global email
             email = request.form.get('email') 
+            global birthdate
             birthdate = request.form.get('birthday')
+            global parent
             parent = request.form.get('parent') 
+            global notes
             notes = request.form.get('notes')
-            belt = request.form.get('belt')
-            instructor = request.form.get('instructor') 
+            beltDB = request.form.get('belt')
+            instructorInput = request.form.get('instructor') 
+            global username
             username = request.form.get('username')
+            global password
             password = request.form.get('password')
+            #Sets boolean values
+            global userStatus
             userStatus = 1
-            if instructor == None:
-                instructor = 0
+            if instructorInput == None:
+                instructorInput = 0
             else:
-                instructor = 1
-            queryTuple = firstName, lastName, phone, instructor, birthdate, int(belt), userStatus
-            queryStart = "INSERT INTO Accounts (First_Name, Last_Name, Phone, Instructor, DOB, Belt, Status"
+                instructorInput = 1
+            global instructor
+            instructor = instructorInput
+            #Base query constuction
+            global belt
+            belt = outputBelt(beltDB)
+            queryTuple = outputTuple(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password)
+            '''queryStart = "INSERT INTO Accounts (First_Name, Last_Name, Phone, Instructor, DOB, Belt, Status"
             queryValues = ") VALUES (%s, %s, %s, %s, %s, %s, %s"
             queryEnd = ")"
-            ############Test Code
+            #Query building
             if email != '':
-                queryTuple = queryTuple + (email,)
                 queryStart += ", Email"
-                queryValues += ", '%s'"
+                queryValues += ", %s"
             if parent != None:
-                queryTuple = queryTuple + (parent,)
                 queryStart += ", Parent"
-                queryValues += ", '%s'"
+                queryValues += ", %s"
             if notes != '':
-                queryTuple = queryTuple + (notes,)
                 queryStart += ", Notes"
-                queryValues += ", '%s'"
+                queryValues += ", %s"
             if address != '':
-                queryTuple = queryTuple + (address,)
                 queryStart += ", Address"
-                queryValues += ", '%s'"
+                queryValues += ", %s"
             if username != None:
-                queryTuple = queryTuple + (username,)
                 queryStart += ", Username"
-                queryValues += ", '%s'"
+                queryValues += ", %s"
             if password != None:
-                queryTuple = queryTuple + (password,)
                 queryStart += ", PassHash"
-                queryValues += ", '%s'"
-            query = queryStart+queryValues+queryEnd
-            
-            #queryTuple += queryEnd
-            #message = (firstName + ', ' + lastName + ', ' + address + ', ' + phone + ', ' + email  + ', ' + birthdate + ', ' + parent + ', ' + notes + ', ' + belt + ', ' + instructor + ', ' + username + ', ' + password)
-            #########Test Code End
-            # Checks Accounts for anyone with the same last name
-            #mydb = ConnectDB()
-            #mycursor = mydb.cursor()
+                queryValues += ", %s"'''
+            #final query construction
+            global query
+            query = outputQuery(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password)
+            #query = queryStart+queryValues+queryEnd
+            #Checks Accounts for anyone with the same last name
             mycursor.execute("SELECT First_Name FROM Accounts WHERE Last_Name = %s", (lastName,))
             result = mycursor.fetchall()
-            #query = """INSERT INTO Accounts (First_Name, Last_Name, Address, Phone, Email, DOB, Parent, Status, Notes, Belt, Instructor, Username, PassHash) VALUES (%s, %s, %s, %s, %s, %s, %s, %i, %s, %i, %i, %s, %s)"""
-            #queryTuple = (firstName, lastName, address, phone, email, birthdate, parent, userStatus, notes, belt, instructor, username, password)
-            print(query)
-            print(queryTuple)
-            if firstName in result:
-                name = firstName + ' ' + lastName
-                #DisconnectDB(mycursor, mydb)
-                return redirect(url_for(confirm(query, queryTuple, name)))
-            else:
+            #Compares query results to current form data
+            if result is None:
                 mycursor.execute(query, queryTuple)
                 mydb.commit()
-                #DisconnectDB(mycursor, mydb)
+                flash('Record added.', 'succes')
+                return redirect(url_for('newaccount'))
+            #Last name found in database
+            else:
+                #First name found in database, asks user to confirm creation of new account
+                if (any(firstName in i for i in result)):
+                    name = firstName + ' ' + lastName
+                    #DisconnectDB(mycursor, mydb)
+                    return redirect(url_for('confirm', name=name, page='newaccount'))
+                #Unique name
+                else:
+                    mycursor.execute(query, queryTuple)
+                    mydb.commit()
+                    flash('Record added.', 'succes')
+                    return redirect(url_for('newaccount'))
+                    #DisconnectDB(mycursor, mydb)
     #bad session
     else:
         return redirect(url_for('sessioncount'))
     return render_template('newaccount.html', beltList=beltList, message=message, error=error)
     
 #Confirmation handling
-@app.route('/confirm', methods = ['GET', 'POST'])
-def confirm(query, queryTuple, name):
-    #Session good
+@app.route('/confirm/<name>/<page>', methods = ['GET', 'POST'])
+def confirm(name, page):
+    #global query
+    confirmQuery = globals()['query']
     error = ''
+    #Session good
     if "instructor" in session:
-        if query == None:
+        #redirect
+        if confirmQuery == None:
             redirect(url_for('show_calendar'))
+        #Session good
         else:
+            if page == "newaccount":
+                confirmFirstName = globals()['firstName']
+                confirmLastName = globals()['lastName']
+                confirmAddress = globals()['address']
+                confirmPhone = globals()['phone']
+                confirmEmail = globals()['email']
+                confirmBirthdate = globals()['birthdate']
+                confirmParent = globals()['parent']
+                confirmNotes = globals()['notes']
+                confirmBelt = globals()['belt']
+                confirmUserStatus = globals()['userStatus']
+                confirmInstructor = globals()['instructor']
+                confirmUsername = globals()['username']
+                confirmPassword = globals()['password']
+                #queryTuple = (confirmFirstName, confirmLastName, confirmPhone, confirmInstructor, confirmBirthdate, confirmBelt, confirmUserStatus)
+                queryTuple = outputTuple(confirmFirstName, confirmLastName, confirmPhone, confirmInstructor, confirmBirthdate, confirmBelt, confirmUserStatus, confirmEmail, confirmParent, confirmNotes, confirmAddress, confirmUsername, confirmPassword)
             try:
                 mydb = ConnectDB()
                 mycursor = mydb.cursor()
                 message = 'There is already a database entry for ' + name + ". Do you wish to create a new record anyway?"
-                if form.validate_on_submit():
+                if request.method == 'POST':
                     if 'confirmbutton' in request.form:
-                        mycursor.execute(query, queryTuple)
-                        return redirect(url_for('show_calendar'))
+                        print(confirmQuery)
+                        print(queryTuple)
+                        mycursor.execute(confirmQuery, queryTuple)
+                        mydb.commit()
+                        flash('Record added.', 'succes') 
+                        return redirect(url_for(page))
                     elif 'denybutton' in request.form:
-                        return redirect(url_for('show_calendar'))
+                        flash('Canclled record upload.', 'succes') 
+                        return redirect(url_for(page))
             except:
                 error = 'Database error'
     #Session bad
     else:
         return redirect(url_for('sessioncount'))
-    return render_template('confirm.html', message=message, error=error)
+    return render_template('confirm.html', message=message, error=error, name=name, page=page)
 
 #Handles creation of new classes
 @app.route('/newclass', methods = ['GET', 'POST'])

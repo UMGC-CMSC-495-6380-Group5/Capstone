@@ -10,33 +10,22 @@
 #10/06/2020     NCROWN              Added error handling for database connection error to authenticate(); Added form support for newaccount; implemented passHash() and DisconnectDB(); added backend for confirm.html
 #10/07/2020     NCROWN              Fixed errors on backend of confirm() function for passing empty tuples by using global variables
 #10/07/2020     NCROWN              Implemented tuplebuilder functions; continued development on confirm() function
+#10/08/2020     NCROWN              Implemented SHA256 password encryption, completed confirm()/newaccount() functionality; updated newclass to interact with confirm() functionality
 
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 #from testform import TestForm
 from app_calendar import *
 from database_connector import ConnectDB, DisconnectDB
-from datetime import timedelta
-from datetime import date
-from passwordhashgen import passHash
-from tuplebuilder import outputTuple, outputBelt, outputQuery
+from datetime import timedelta, time, date
+from dateutil.parser import parse
+from passwordhashgen import passHash, passCompare
+from tuplebuilder import accountTuple, outputBelt, accountQuery, timeBuilder
 
-#global variables
-firstName = ''
-lastName = ''
-phone = ''
-instructor = ''
-birthdate = ''
-belt = 1
-userStatus = 1
-email = ''
-parent = ''
-notes = ''
-address = ''
-username = ''
-password = ''
-instructor = 0
+#global variables to mitigate issue with passing queries and tuples to confirm()
 query = ''
+queryTuple = ''
 
+#flask framework
 app = Flask(__name__)
 app.config['SECRET_KEY'] ='12345'
 
@@ -73,8 +62,6 @@ def authenticate():
                 #Imports form data from index.html
                 username = request.form.get('formuser') 
                 userpass = request.form.get('formpass')
-                #Password/salt hash conversion
-                suppliedHash = passHash(userpass)
                 #Connecting to the database
                 try:
                     mydb = ConnectDB()
@@ -82,7 +69,6 @@ def authenticate():
                     mycursor = mydb.cursor()
                     mycursor.execute("SELECT PassHash FROM Accounts WHERE Username = %s", (username,))
                     result = mycursor.fetchone()
-                    DisconnectDB(mycursor, mydb)
                     #Checks for results
                     if result is None:
                         message = "Incorrect username or password"
@@ -93,7 +79,9 @@ def authenticate():
                     else:
                         #Correct path
                         importHash = ''.join(result)
-                        if importHash == suppliedHash:
+                        passwordCompare = False
+                        passwordCompare = passCompare(userpass, importHash)
+                        if passwordCompare == True:
                             message = "Correct credentials"
                             #Creates session with username
                             app.permanent_session_lifetime = timedelta(minutes=15)
@@ -148,107 +136,76 @@ def show_calendar():
 #Handles creation of new accounts    
 @app.route('/newaccount', methods = ['GET', 'POST'])
 def newaccount():
-    message = ''
     error = ''
     #active session
     if "instructor" in session:
-
-        mydb = ConnectDB()
-        mycursor = mydb.cursor()
-        #Populates belt selection dropdown
-        mycursor.execute("SELECT * FROM BeltRanks order by BeltID")
-        beltList = mycursor.fetchall()
-        #DisconnectDB(mycursor, mydb)
-        if request.method == 'POST':
-            #Imports form data from newaccount.html
-            global firstName
-            firstName = request.form.get('first_name')
-            global lastName
-            lastName = request.form.get('last_name')
-            global address
-            address = request.form.get('address') 
-            global phone
-            phone = request.form.get('phone')
-            global email
-            email = request.form.get('email') 
-            global birthdate
-            birthdate = request.form.get('birthday')
-            global parent
-            parent = request.form.get('parent') 
-            global notes
-            notes = request.form.get('notes')
-            beltDB = request.form.get('belt')
-            instructorInput = request.form.get('instructor') 
-            global username
-            username = request.form.get('username')
-            global password
-            password = request.form.get('password')
-            #Sets boolean values
-            global userStatus
-            userStatus = 1
-            if instructorInput == None:
-                instructorInput = 0
-            else:
-                instructorInput = 1
-            global instructor
-            instructor = instructorInput
-            #Base query constuction
-            global belt
-            belt = outputBelt(beltDB)
-            queryTuple = outputTuple(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password)
-            '''queryStart = "INSERT INTO Accounts (First_Name, Last_Name, Phone, Instructor, DOB, Belt, Status"
-            queryValues = ") VALUES (%s, %s, %s, %s, %s, %s, %s"
-            queryEnd = ")"
-            #Query building
-            if email != '':
-                queryStart += ", Email"
-                queryValues += ", %s"
-            if parent != None:
-                queryStart += ", Parent"
-                queryValues += ", %s"
-            if notes != '':
-                queryStart += ", Notes"
-                queryValues += ", %s"
-            if address != '':
-                queryStart += ", Address"
-                queryValues += ", %s"
-            if username != None:
-                queryStart += ", Username"
-                queryValues += ", %s"
-            if password != None:
-                queryStart += ", PassHash"
-                queryValues += ", %s"'''
-            #final query construction
-            global query
-            query = outputQuery(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password)
-            #query = queryStart+queryValues+queryEnd
-            #Checks Accounts for anyone with the same last name
-            mycursor.execute("SELECT First_Name FROM Accounts WHERE Last_Name = %s", (lastName,))
-            result = mycursor.fetchall()
-            #Compares query results to current form data
-            if result is None:
-                mycursor.execute(query, queryTuple)
-                mydb.commit()
-                flash('Record added.', 'succes')
-                return redirect(url_for('newaccount'))
-            #Last name found in database
-            else:
-                #First name found in database, asks user to confirm creation of new account
-                if (any(firstName in i for i in result)):
-                    name = firstName + ' ' + lastName
-                    #DisconnectDB(mycursor, mydb)
-                    return redirect(url_for('confirm', name=name, page='newaccount'))
-                #Unique name
+        try: 
+            mydb = ConnectDB()
+            mycursor = mydb.cursor()
+            #Populates belt selection dropdown
+            mycursor.execute("SELECT * FROM BeltRanks order by BeltID")
+            beltList = mycursor.fetchall()
+            if request.method == 'POST':
+                #Imports form data from newaccount.html
+                firstName = request.form.get('first_name')
+                lastName = request.form.get('last_name')
+                address = request.form.get('address') 
+                phone = request.form.get('phone')
+                email = request.form.get('email') 
+                birthdate = request.form.get('birthday')
+                parent = request.form.get('parent') 
+                notes = request.form.get('notes')
+                beltDB = request.form.get('belt')
+                instructor = request.form.get('instructor') 
+                username = request.form.get('username')
+                password = request.form.get('password')
+                #Sets boolean/integer values
+                userStatus = 1
+                if instructor == None:
+                    instructor = 0
+                    username = None
+                    password = None
                 else:
+                    instructor = 1
+                    password = passHash(password)
+                belt = outputBelt(beltDB)
+                #Base query constuction
+                global queryTuple
+                queryTuple = accountTuple(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password)
+                #final query construction
+                global query
+                query = accountQuery(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password)
+                #Checks Accounts for anyone with the same last name
+                mycursor.execute("SELECT First_Name FROM Accounts WHERE Last_Name = %s", (lastName,))
+                result = mycursor.fetchall()
+                #Compares query results to current form data
+                if result is None:
                     mycursor.execute(query, queryTuple)
                     mydb.commit()
                     flash('Record added.', 'succes')
+                    query = ''
+                    queryTuple = ''
                     return redirect(url_for('newaccount'))
-                    #DisconnectDB(mycursor, mydb)
+                #Last name found in database
+                else:
+                    #First name found in database, asks user to confirm creation of new account
+                    if (any(firstName in i for i in result)):
+                        name = firstName + ' ' + lastName
+                        return redirect(url_for('confirm', name=name, page='newaccount'))
+                    #Unique name
+                    else:
+                        mycursor.execute(query, queryTuple)
+                        mydb.commit()
+                        flash('Record added.', 'succes')
+                        query = ''
+                        queryTuple = ''
+                        return redirect(url_for('newaccount'))
+        except:
+                error = 'Database error'
     #bad session
     else:
         return redirect(url_for('sessioncount'))
-    return render_template('newaccount.html', beltList=beltList, message=message, error=error)
+    return render_template('newaccount.html', beltList=beltList, error=error)
     
 #Confirmation handling
 @app.route('/confirm/<name>/<page>', methods = ['GET', 'POST'])
@@ -263,36 +220,25 @@ def confirm(name, page):
             redirect(url_for('show_calendar'))
         #Session good
         else:
-            if page == "newaccount":
-                confirmFirstName = globals()['firstName']
-                confirmLastName = globals()['lastName']
-                confirmAddress = globals()['address']
-                confirmPhone = globals()['phone']
-                confirmEmail = globals()['email']
-                confirmBirthdate = globals()['birthdate']
-                confirmParent = globals()['parent']
-                confirmNotes = globals()['notes']
-                confirmBelt = globals()['belt']
-                confirmUserStatus = globals()['userStatus']
-                confirmInstructor = globals()['instructor']
-                confirmUsername = globals()['username']
-                confirmPassword = globals()['password']
-                #queryTuple = (confirmFirstName, confirmLastName, confirmPhone, confirmInstructor, confirmBirthdate, confirmBelt, confirmUserStatus)
-                queryTuple = outputTuple(confirmFirstName, confirmLastName, confirmPhone, confirmInstructor, confirmBirthdate, confirmBelt, confirmUserStatus, confirmEmail, confirmParent, confirmNotes, confirmAddress, confirmUsername, confirmPassword)
+            confirmQueryTuple = globals()['queryTuple']
             try:
                 mydb = ConnectDB()
                 mycursor = mydb.cursor()
                 message = 'There is already a database entry for ' + name + ". Do you wish to create a new record anyway?"
                 if request.method == 'POST':
+                    global query
+                    global queryTuple
                     if 'confirmbutton' in request.form:
-                        print(confirmQuery)
-                        print(queryTuple)
-                        mycursor.execute(confirmQuery, queryTuple)
+                        mycursor.execute(confirmQuery, confirmQueryTuple)
                         mydb.commit()
-                        flash('Record added.', 'succes') 
+                        flash('Record added.', 'succes')
+                        query = ''
+                        queryTuple = ''
                         return redirect(url_for(page))
                     elif 'denybutton' in request.form:
                         flash('Canclled record upload.', 'succes') 
+                        query = ''
+                        queryTuple = ''
                         return redirect(url_for(page))
             except:
                 error = 'Database error'
@@ -306,30 +252,60 @@ def confirm(name, page):
 def newclass():
     #Session good
     if "instructor" in session:
-        message = ""
+        error = ''
+        hourList = ["00", "01", "02", "03", "04" , "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"]
+        minuteList = ["00", "15", "30", "45"]
         if request.method == "POST":
-            class_name = request.form('class_name')
-            date = request.form('date')
-            start_time = request.form('start_time')
-            end_time = request.form('end_time')
-            students = request.form('students')
-            instructors = request.form('instructors')
-            
-            query = "INSERT INTO Classes (ClassName, ClassDate, ClassStartTime, ClassEndTime) VALUES"
-            query += "(" + class_name + "," + date + "," + start_time + "," + end_time + ");"
+            class_name = request.form.get('class_name')
+            date = request.form.get('date')
+            start_hour = request.form.get('starthour')
+            end_hour = request.form.get('endhour')
+            start_minute = request.form.get('startminute')
+            end_minute = request.form.get('endminute')
+            #Send time to string builder
+            start_time = timeBuilder(start_hour, start_minute)
+            end_time = timeBuilder(end_hour, end_minute)
+            global query
+            query = "INSERT INTO Classes (ClassName, ClassDate, ClassStartTime, ClassEndTime) VALUES (%s, %s, %s, %s)"
+            global queryTuple
+            queryTuple = (class_name, date, start_time, end_time)
             
             try: 
                 mydb = ConnectDB()
-                conn = mydb.cursor()
-                conn.execute(query)
-                message = "Class Recorded"
-            except OSError:
-                message = "Unable to save class"
+                mycursor = mydb.cursor()
+                mycursor.execute("SELECT ClassStartTime FROM Classes WHERE ClassDate = %s", (date,))
+                result = mycursor.fetchall()
+                for i in result:
+                    print(i)
+                #Compares query results to current form data
+                if result is None:
+                    mycursor.execute(query, queryTuple)
+                    mydb.commit()
+                    flash('Record added.', 'succes')
+                    query = ''
+                    queryTuple = ''
+                    return redirect(url_for('newclass'))
+                #Last name found in database
+                else:
+                    #First name found in database, asks user to confirm creation of new account
+                    if (any(start_time in i for i in result)):
+                        name = "class starting at " + start_time + " on " + date
+                        return redirect(url_for('confirm', name=name, page='newclass'))
+                    #Unique name
+                    else:
+                        mycursor.execute(query, queryTuple)
+                        mydb.commit()
+                        flash('Record added.', 'succes')
+                        query = ''
+                        queryTuple = ''
+                        return redirect(url_for('newaccount'))
+            except:
+                error = 'Database error'
     #Session bad
     else:
         return redirect(url_for('sessioncount'))
     
-    return render_template('newclass.html', message=message)
+    return render_template('newclass.html', error=error, hourList=hourList, minuteList=minuteList)
     
-
+#flask framework
 app.run(ssl_context='adhoc', host='0.0.0.0', port=8080)

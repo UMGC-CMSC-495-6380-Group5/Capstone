@@ -1,7 +1,7 @@
 #DATE           TEAM MEMBER         UPDATE
 #10/08/2020     NCROWN              Created tuplebuilder.py to handle building of queries and tuples for newaccount
 
-def outputTuple(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password):
+def accountTuple(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password):
     queryTuple = (firstName, lastName, phone, instructor, birthdate, belt, userStatus)
     if email != '':
         queryTuple = queryTuple + (email,)
@@ -17,7 +17,7 @@ def outputTuple(firstName, lastName, phone, instructor, birthdate, belt, userSta
         queryTuple = queryTuple + (password,)
     return queryTuple
 
-def outputQuery(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password):
+def accountQuery(firstName, lastName, phone, instructor, birthdate, belt, userStatus, email, parent, notes, address, username, password):
     queryStart = "INSERT INTO Accounts (First_Name, Last_Name, Phone, Instructor, DOB, Belt, Status"
     queryValues = ") VALUES (%s, %s, %s, %s, %s, %s, %s"
     queryEnd = ")"
@@ -81,3 +81,9 @@ def outputBelt(beltDB):
     elif beltDB == "17":
         belt = 17
     return belt
+    
+def timeBuilder(hour, minute):
+    print(hour)
+    print(minute)
+    buildTime = hour + ":" + minute + ":00"
+    return buildTime

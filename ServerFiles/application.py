@@ -42,6 +42,7 @@ def sessioncount():
             session['attempt'] = 0
     return redirect(url_for('authenticate'))
 
+
 #Login handling    
 @app.route('/login', methods=['post', 'get'])
 def authenticate():
@@ -103,6 +104,7 @@ def authenticate():
             
     return render_template('login.html', message=message, error=error)
 
+
 #Handles logging the user out
 @app.route('/logout')
 def logout():
@@ -131,6 +133,7 @@ def show_calendar():
         return redirect(url_for('sessioncount'))
     return render_template('calendar.html', year=y, month=m, day=d, days_in_month=dm,
     weekday=wd, month_name=mn, total_accounts=t, all_classes=ac)
+
 
 #Handles creation of new accounts    
 @app.route('/newaccount', methods = ['GET', 'POST'])
@@ -215,6 +218,7 @@ def newaccount():
     else:
         return redirect(url_for('sessioncount'))
     return render_template('newaccount.html', beltList=beltList, error=error)
+
     
 #Confirmation handling
 @app.route('/confirm/<name>/<page>', methods = ['GET', 'POST'])
@@ -268,6 +272,7 @@ def confirm(name, page):
     else:
         return redirect(url_for('sessioncount'))
     return render_template('confirm.html', message=message, error=error, name=name, page=page)
+
 
 #Handles creation of new classes
 @app.route('/newclass', methods = ['GET', 'POST'])
@@ -340,8 +345,108 @@ def newclass():
     #Session bad
     else:
         return redirect(url_for('sessioncount'))
-    
+        
     return render_template('newclass.html', error=error, hourList=hourList, minuteList=minuteList)
+
+
+#Rendering placeholder page for attendance
+@app.route('/attendance', methods = ['GET', 'POST'])
+def attendance():
+    #active session
+    if "instructor" in session:
+        placeholder = 1
+        #TO DO
+        
+    #bad session
+    else:
+        return redirect(url_for('sessioncount'))
+    return render_template('attendance.html')
+
+
+#Handles class modification and deletion    
+@app.route('/modifyclass', methods=['GET', 'POST'])
+def modifyclass():
+    error = ''
+    #active session
+    if "instructor" in session:
+        try: 
+            mydb = ConnectDB()
+            mycursor = mydb.cursor()
+            #TO DO
+            
+        except:
+                error = 'Database error'
+    #bad session
+    else:
+        return redirect(url_for('sessioncount'))
+    return render_template('modifyclass.html', error=error)
+
+
+#Handles class selection  
+@app.route('/listclasses', methods=['GET', 'POST'])
+def listclasses():
+    error = ''
+    #active session
+    if "instructor" in session:
+        try: 
+            mydb = ConnectDB()
+            mycursor = mydb.cursor()
+            #Populates class selection dropdown
+            mycursor.execute("SELECT * FROM Classes order by ClassID")
+            classList = mycursor.fetchall()
+            #TO DO
+            
+        except:
+                error = 'Database error'
+    #bad session
+    else:
+        return redirect(url_for('sessioncount'))
+    return render_template('listclasses.html', error=error, classList=classList)
+
+
+#Handles account modification and deletion    
+@app.route('/modifyaccount', methods=['GET', 'POST'])
+def modifyaccount():
+    error = ''
+    #active session
+    if "instructor" in session:
+        try: 
+            mydb = ConnectDB()
+            mycursor = mydb.cursor()
+            #Populates belt selection dropdown
+            mycursor.execute("SELECT * FROM BeltRanks order by BeltID")
+            beltList = mycursor.fetchall()
+            #TO DO
+            
+        except:
+                error = 'Database error'
+    #bad session
+    else:
+        return redirect(url_for('sessioncount'))
+    return render_template('modifyaccount.html', error=error)
+
     
+#Handles account selection    
+@app.route('/listaccounts', methods=['GET', 'POST'])
+def listaccounts():
+    error = ''
+    #active session
+    if "instructor" in session:
+        try: 
+            mydb = ConnectDB()
+            mycursor = mydb.cursor()
+            #Populates belt selection dropdown
+            mycursor.execute("SELECT * FROM Accounts order by AccountID")
+            accountList = mycursor.fetchall()
+            #TO DO
+            
+        except:
+                error = 'Database error'
+    #bad session
+    else:
+        return redirect(url_for('sessioncount'))
+    return render_template('listaccounts.html', error=error, accountList=accountList)
+
+
 #flask framework
 app.run(ssl_context='adhoc', host='0.0.0.0', port=8080)

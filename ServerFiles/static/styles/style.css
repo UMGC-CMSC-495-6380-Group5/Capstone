@@ -90,15 +90,15 @@ body {
 .dropdown:hover .dropbtn {background-color: #000;} 
 
 /* Content */
-
+/*
 .content {
     width: 80%;
     margin: 0 auto;
-}
-
+} 
+*/
 
 /* General Tables */
-
+/*
 table{
 	width: 100%;
 	margin: 0 auto;
@@ -122,7 +122,7 @@ th {
 .field input {
     width: 300px;
 }
-
+*/
 #attendance {
     height: 360px;
 }

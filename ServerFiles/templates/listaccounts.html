@@ -1,0 +1,37 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+10/08/2020 		NCROWN 			Created listaccounts.html file
+
+-->
+
+{% extends "layout.html" %}
+{% block content %}
+<center>
+<form name="list_accounts" action="" method="POST">
+	<table>
+		<caption  style="height:40px;">
+			<span>Select an account to modify:</span>
+		</caption>
+		<tr>
+			<td class="field"><SELECT name="account" id="account" >
+			        <OPTION value=""></OPTION>
+				{% for h in accountList %}
+					<OPTION value="{{h.0}}">{{h.1}} {{h.2}}</OPTION>
+				{% endfor %}
+			</SELECT></td>
+			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Select account" /></td>
+		</tr>
+	</table>
+</form>
+<br>
+{% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
+</center>
+{% for message in get_flashed_messages() %}
+	<center>
+	    <p>{{ message }}</p>
+	</center>
+{% endfor %}		
+
+{% endblock content %}

@@ -2,7 +2,7 @@
 DATE 			TEAM MEMBER 	UPDATE
 //		 		TFEITOSA		Created layout.html file
 10/05/2020 		NCROWN 			Updated to include revision table
-10/08/2020 		NCROWN 			Added maxlength attribute to class name box, removed attedance based fields, changed time to dropdown, added javascript to handle time, added error handling for input fields and submit button
+10/08/2020 		NCROWN 			Added maxlength attribute to class name box, removed attedance based fields, changed time to dropdown, added javascript to handle time, added error handling for input fields and submit button, added mapping to modify accounts and classes
 
 -->
 
@@ -81,12 +81,12 @@ DATE 			TEAM MEMBER 	UPDATE
 </form>
 <br>
 <p id="timecompare"></p>
-</center>
+
 
 {% if error %}
     <p class="error"><strong>Error:</strong> {{ error }}
 {% endif %}
-
+</center>
 {% for message in get_flashed_messages() %}
 	<center>
 	    <p>{{ message }}</p>

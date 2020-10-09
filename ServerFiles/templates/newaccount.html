@@ -7,7 +7,7 @@ DATE 			TEAM MEMBER 	UPDATE
 -->
 {% extends "layout.html" %}
 {% block content %}
-
+<center>
 <form name="new_account" action="" method="POST">
 	<table>
 		<caption  style="height:40px;">
@@ -136,7 +136,7 @@ DATE 			TEAM MEMBER 	UPDATE
 {% if error %}
     <p class="error"><strong>Error:</strong> {{ error }}
 {% endif %}
-
+</center>
 {% for message in get_flashed_messages() %}
 	<center>
 	    <p>{{ message }}</p>

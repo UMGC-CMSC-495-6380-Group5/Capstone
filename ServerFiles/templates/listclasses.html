@@ -1,0 +1,37 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+10/08/2020 		NCROWN 			Created listclasses.html file
+
+-->
+
+{% extends "layout.html" %}
+{% block content %}
+<center>
+<form name="list_classes" action="" method="POST">
+	<table>
+		<caption  style="height:40px;">
+			<span>Select a class to modify:</span>
+		</caption>
+		<tr>
+			<td class="field"><SELECT name="account" id="account" >
+			        <OPTION value=""></OPTION>
+				{% for h in classList %}
+					<OPTION value="{{h.0}}">Class name: {{h.1}}  Date: {{h.2}}  Start time: {{h.3}}</OPTION>
+				{% endfor %}
+			</SELECT></td>
+			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Select class" /></td>
+		</tr>
+	</table>
+</form>
+<br>
+{% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
+</center>
+{% for message in get_flashed_messages() %}
+	<center>
+	    <p>{{ message }}</p>
+	</center>
+{% endfor %}	
+
+{% endblock content %}

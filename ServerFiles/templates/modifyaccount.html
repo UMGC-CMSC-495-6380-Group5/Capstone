@@ -1,11 +1,12 @@
 <!--
 DATE 			TEAM MEMBER 	UPDATE
 10/08/2020 		NCROWN 			Created modifyaccount.html file
-
+10/09/2020 		NCROWN 			Updated modifyaccount.html functionality
+10/10/2020 		NCROWN 			Completed modifyaccount.html functionality
 -->
 {% extends "layout.html" %}
 {% block content %}
-</center>
+<center>
 <form name="modify_account" action="" method="POST">
 	<table>
 		<caption  style="height:40px;">
@@ -13,35 +14,35 @@ DATE 			TEAM MEMBER 	UPDATE
 		</caption>
 		<tr>
 			<td class="label"><p>First Name:</p></td>
-			<td class="field"><input name="first_name" id="first_name" type="text" pattern="[A-Za-z]+" title="Only letters allowed" maxlength="15" required></td>
+			<td class="field"><input name="first_name" id="first_name" type="text" pattern="[A-Za-z]+" title="Only letters allowed" maxlength="15" required value="{{accountList.1}}"></td>
 			<td class="label"><p>Instructor:</p></td>
-			<td class="field"><input name="instructor" id="instructorCheckbox" type="checkbox" onclick="enableUserFields()"></td>
+			<td class="field"><input name="instructor" id="instructorCheckbox" type="checkbox" onclick="checkboxHandler()" {% if accountList.5 == 1 %} checked {% endif %} ></td>
 			<script>
-				document.getElementById('instructorCheckbox').onchange = function() {
-					 document.getElementById('usernameInput').disabled = !this.checked;
-					 document.getElementById('passInput').disabled = !this.checked;
-					 document.getElementById('pass2Input').disabled = !this.checked;
-					 document.getElementById('usernameInput').required = this.checked;
-					 document.getElementById('passInput').required = this.checked;
-					 document.getElementById('pass2Input').required = this.checked;
+				function checkboxHandler() {
+					 document.getElementById('usernameInput').disabled = !document.getElementById('instructorCheckbox').checked;
+					 document.getElementById('passInput').disabled = !document.getElementById('instructorCheckbox').checked;
+					 document.getElementById('pass2Input').disabled = !document.getElementById('instructorCheckbox').checked;
+					 document.getElementById('usernameInput').required = document.getElementById('instructorCheckbox').checked;
+					 document.getElementById('passInput').required = document.getElementById('instructorCheckbox').checked;
+					 document.getElementById('pass2Input').required = document.getElementById('instructorCheckbox').checked;
 				};
 			</script>
 		</tr>
 		<tr>
 			<td class="label"><p>Last Name:</p></td>
-			<td class="field"><input name="last_name" id="last_name" type="text" pattern="[A-Za-z]+" title="Only letters allowed" maxlength="15" required></td>
+			<td class="field"><input name="last_name" id="last_name" type="text" pattern="[A-Za-z]+" title="Only letters allowed" maxlength="15" required value="{{accountList.2}}"></td>
 			<td class="label"><p>Username:</p></td>
-			<td class="field"><input name="username" id="usernameInput" type="text" pattern="[A-Za-z0-9]+" title="Only letters and numbers allowed" maxlength="20" disabled></td>
+			<td class="field"><input name="username" id="usernameInput" type="text" pattern="[A-Za-z0-9]+" title="Only letters and numbers allowed" maxlength="20" value="{{accountList.12}}" {% if accountList.5 != 1 %} disabled {% endif %}></td>
 		</tr>
 		<tr>
 			<td class="label"><p>Address:</p></td>
-			<td class="field"><input name="address" id="address" type="text" pattern="[A-Za-z0-9. ]+" title="Only letters, numbers, and . allowed" maxlength="50"></td>
+			<td class="field"><input name="address" id="address" type="text" pattern="[A-Za-z0-9. ]+" title="Only letters, numbers, and . allowed" maxlength="50" value="{{accountList.3}}"></td>
 			<td class="label"><p>Password:</p></td>
 			<td class="field"><input name="password" id="passInput" type="password" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed" disabled></td>
 		</tr>
 		<tr>
 			<td class="label"><p>Phone:</p></td>
-			<td class="field"><input name="phone" id="phone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890"title="Only numbers and - allowed" required></td>
+			<td class="field"><input name="phone" id="phone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890"title="Only numbers and - allowed" required value="{{accountList.4}}"></td>
 			<td class="label"><p>Password Confirmation:</p></td>
 			<td class="field"><input name="password2" id="pass2Input" type="password" pattern="[A-Za-z0-9!@#$%^&*()]+" title="Only letters, numbers, and !@#$%^&*() allowed" maxlength="30" disabled></td>
 			<script>
@@ -60,13 +61,13 @@ DATE 			TEAM MEMBER 	UPDATE
 		</tr>
 		<tr>
 			<td class="label"><p>Email:</p></td>
-			<td class="field"><input name="email" id="email" type="email" maxlength="30"></td>
+			<td class="field"><input name="email" id="email" type="email" maxlength="30" value="{{accountList.7}}"></td>
 			<td></td>
 			<td><p id="passwordmatching"></p></td>
 		</tr>
 		<tr>
 			<td class="label"><p>Date of Birth:</p></td>
-			<td class="field"><input name="birthday" id="birthday" type="date" required></td>
+			<td class="field"><input name="birthday" id="birthday" type="date" required value="{{accountList.6}}"></td>
 			<script>
 				// Handles checking if over the age of 18
 				document.getElementById('birthday').addEventListener('change', function() {
@@ -102,13 +103,13 @@ DATE 			TEAM MEMBER 	UPDATE
 		</tr>
 		<tr>
 			<td class="label"><p>Parent:</p></td>
-			<td class="field"><input name="parent" id="parent" type="text" pattern="[A-Za-z ]+" title="Only letters allowed" maxlength="30" disabled></td>
+			<td class="field"><input name="parent" id="parent" type="text" pattern="[A-Za-z ]+" title="Only letters allowed" maxlength="30" {% if accountList.8|length %}{% else %} disabled {% endif %} value="{{accountList.8}}"></td>
 			<td></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td class="label"><p>Notes:</p></td>
-			<td class="field"><input name="notes" id="notes" type="text" pattern="[A-Za-z0-9!@#$%^&*() ]+" title="Only letters, numbers, and !@#$%^&*() allowed" maxlength="200"></td>
+			<td class="field"><input name="notes" id="notes" type="text" pattern="[A-Za-z0-9!@#$%^&*() ]+" title="Only letters, numbers, and !@#$%^&*() allowed" maxlength="200" value="{{accountList.11}}"></td>
 			<td></td>
 			<td></td>
 		</tr>
@@ -116,17 +117,37 @@ DATE 			TEAM MEMBER 	UPDATE
 			<td class="label"><p>Belt:</p></td>
 			<td class="field"><SELECT name="belt" id="belt">
 				{% for b in beltList %}
-					<OPTION value="{{b.0}}">{{b.1}}</OPTION>
+					<OPTION value={{b.0}} {% if b.0 == accountList.9 %} selected {% endif %}>{{b.1}}</OPTION>
 				{% endfor %}
 			</SELECT></td>
 			<td></td>
 			<td></td>
 		</tr>
 		<tr>
+			<td class="label"><p>User Active:</p></td>
+			<td class="field"><input name="userstatus" id="statusCheckbox" type="checkbox" {% if accountList.10 == 1 %} checked {% endif %}></td>
+			{% if accountList.5 == 1 %}
+			<td class="label"><p>Change password:</p></td>
+			<td class="field"><input name="pwchange" id="pwchange" type="checkbox" onclick="checkboxHandler2()"></td>
+			<script>
+				function checkboxHandler2() {
+					 document.getElementById('passInput').disabled = !document.getElementById('pwchange').checked;
+					 document.getElementById('pass2Input').disabled = !document.getElementById('pwchange').checked;
+					 document.getElementById('passInput').required = document.getElementById('pwchange').checked;
+					 document.getElementById('pass2Input').required = document.getElementById('pwchange').checked;
+				};
+			</script>
+			{% else %}
 			<td></td>
-			<td><input name="deletebutton" id="deletebutton" type="button" class="button" value="Delete account" /></td>
-			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Modify account" /></td>
+			<td></td>	
+			{% endif %}
+		</tr>
+		<tr>
 			<td></td>
+			<td><input name="accountdeletebutton" id="accountdeletebutton" type="submit" class="button" value="Delete account" /></td>
+			<td><input name="accountsubmitbutton" id="accountsubmitbutton" type="submit" class="button" value="Modify account" /></td>
+			<td></td>
+			
 		</tr>
   	</table>
 </form>

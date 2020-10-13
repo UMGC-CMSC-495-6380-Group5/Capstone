@@ -118,9 +118,15 @@ DATE 			TEAM MEMBER 	UPDATE
 			<td class="label"><p>Belt:</p></td>
 			<td class="field"><SELECT name="belt" id="belt">
 				{% for b in beltList %}
-					<OPTION value="{{b.0}}">{{b.1}}</OPTION>
+					<OPTION value={{b.0}}>{{b.1}}</OPTION>
 				{% endfor %}
 			</SELECT></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="label"><p>User Active:</p></td>
+			<td class="field"><input name="userstatus" id="statusCheckbox" type="checkbox" checked></td>
 			<td></td>
 			<td></td>
 		</tr>

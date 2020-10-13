@@ -2,7 +2,8 @@
 DATE 			TEAM MEMBER 	UPDATE
 //		 		TFEITOSA		Created calendar.html file
 10/05/2020 		NCROWN 			Updated to include revision table
-
+10/07/2020     	TFEITOSA      	Worked on calendar interface
+10/08/2020     TFEITOSA        	Worked on calendar interface
 
 -->
 
@@ -13,7 +14,7 @@ DATE 			TEAM MEMBER 	UPDATE
 <div id="calendar">
     
     <div class="stats">
-    	<table>
+    	<table class="statstable">
     		<tr>
     			<td><h1>Total</h1></td>
     			<td><h1>New</h1></td>
@@ -21,74 +22,79 @@ DATE 			TEAM MEMBER 	UPDATE
     		</tr>
     		<tr>
     			<td>{{ total_accounts }}</td>
-    			<td></td>
-    			<td></td>
+    			<td>3</td>
+    			<td>0</td>
     		</tr>
     	
     	</table>	
     </div>
-    
-	<table id="calendar_table">
-		<caption>
-			<span id="year">{{ year }}</span>
-			<br>
-			<span id="left_arrow">&lt</span>
-			<span id="month">{{ month_name }}</span>
-			<span id="right_arrow">&gt</span>
-		</caption>
-		<thead>
+    <form name="calendar_form" action="" method="POST">
+		<table id="calendar_table" style="background:#c33;">
 			<tr>
-				<th>Sun</th>
-				<th>Mon</th>
-				<th>Tue</th>
-				<th>Wed</th>
-				<th>Thu</th>
-				<th>Fri</th>
-				<th>Sat</th>
-			</tr>	
-		</thead>
-		<tbody id="calendar_content">
-			
-			{% for r in range(6) %}
-			<tr>
-				{% for c in range(7) %}
-					{% if r == 0 and c <= weekday %}
-						<td><p></p></td>
-					{% elif r == 0 and c >= weekday %}
-						<td><p>{{ c - weekday }}</p></td>
-					{% else %}
-						{% if c + r * 7 - weekday <= days_in_month %}
-						<td><p>{{ c + (r * 7) - weekday }}</p></td>
-						{% endif %}
-					{% endif %}
-				{% endfor %}
+				<td></td>
+				<td id="year">{{ year }}</td>
+				<td></td>
 			</tr>
-			{% endfor %}
-			
-		</tbody>
-	</table>
+			<tr>
+				<td><input  id="left_arrow" type="submit" value="&lt" /></td>
+				<td id="month">{{ month_name }}</td>
+				<td><input id="right_arrow" type="submit" value="&gt" /></td>
+			</tr>
+			</td>
+		</table>
+		<table id="calendar_table">
+			<thead>
+				<tr>
+					<th>Sun</th>
+					<th>Mon</th>
+					<th>Tue</th>
+					<th>Wed</th>
+					<th>Thu</th>
+					<th>Fri</th>
+					<th>Sat</th>
+				</tr>	
+			</thead>
+			<tbody id="calendar_content">
+				
+				{% for r in range(6) %}
+				<tr>
+					{% for c in range(7) %}
+						{% if r == 0 and c <= weekday %}
+							<td><p></p></td>
+						{% elif r == 0 and c >= weekday %}
+							<td><p>{{ c - weekday }}</p></td>
+						{% else %}
+							{% if c + r * 7 - weekday <= days_in_month %}
+							<td><p>{{ c + (r * 7) - weekday }}</p></td>
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+				</tr>
+				{% endfor %}
+				
+			</tbody>
+		</table>
+	</form>
 </div>
 	
 <div id="day">
-	<h1>{{ day }}</h1>
+	<h1>Today   {{ day }}</h1>
+	<table>
+		{% for class in today_classes %}
+			<tr>
+				<td>{{ class[1] }}</td>
+			</tr>
+		{% endfor %}
+		
+	</table>
+	<br>
+	<h1>This Month</h1>
 	<table>
 		{% for class in all_classes %}
 			<tr>
 				<td>{{ class[1] }}</td>
 			</tr>
 		{% endfor %}
-		<tr>
-			<td>9:00AM Sum</td>
-		</tr>
-		<tr>
-			<td>1:00PM Yang</td>
-		</tr>
-		<tr>
-			<td>5:00PM Darnell</td>
-		</tr>
-		<tr>
-			<td>7:00PM Chris</td>
-		</tr>
 	</table>
 </div>
 

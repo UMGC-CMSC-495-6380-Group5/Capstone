@@ -1,7 +1,7 @@
 <!--
 DATE 			TEAM MEMBER 	UPDATE
 10/08/2020 		NCROWN 			Created listaccounts.html file
-
+10/09/2020 		NCROWN 			Added javascript to prevent submission of blank selection
 -->
 
 {% extends "layout.html" %}
@@ -13,13 +13,23 @@ DATE 			TEAM MEMBER 	UPDATE
 			<span>Select an account to modify:</span>
 		</caption>
 		<tr>
-			<td class="field"><SELECT name="account" id="account" >
-			        <OPTION value=""></OPTION>
-				{% for h in accountList %}
-					<OPTION value="{{h.0}}">{{h.1}} {{h.2}}</OPTION>
+			<td class="field"><SELECT name="account" id="account" onchange="inputCheck()">
+			        <OPTION value=" "></OPTION>
+				{% for a in accountList %}
+					<OPTION value={{a.0}}>Name: {{a.1}} {{a.2}} &nbsp;&nbsp;&nbsp; DOB:{{a.3}} &nbsp;&nbsp;&nbsp; Phone: {{a.4}}</OPTION>
 				{% endfor %}
 			</SELECT></td>
-			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Select account" /></td>
+			<script>
+			function inputCheck(){
+				var input = document.getElementById('account').value;
+				if (input == " "){
+					document.getElementById('submitbutton').disabled = true;
+				} else {
+					document.getElementById('submitbutton').disabled = false;
+				}
+			}
+			</script>
+			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Select account" disabled></td>
 		</tr>
 	</table>
 </form>

@@ -1,0 +1,96 @@
+<!--
+DATE 			TEAM MEMBER 	UPDATE
+10/08/2020 	    NCROWN 			Created modifyclass.html file
+10/09/2020      NCROWN          Updated layout of modifyclass.html
+10/10/2020 		NCROWN  		Completed modifyclass.html functionality
+-->
+
+{% extends "layout.html" %}
+{% block content %}
+<center>
+<form name="new_class" action="" method="POST">
+	<table>
+		 <caption  style="height:40px;">
+			 <span>Modify Class</span>
+		 </caption>
+		 <tr>
+		 	 <td class="label"><p>Class Name</p></td>
+			 <td class="field"><input name="class_name" type="text" maxlength="50" required value="{{classDataList.1}}"></td>
+		</tr>
+		 <tr>
+			 <td class="label"><p>Date:</p></td>
+			 <td class="field"><input name="date" type="date" required value="{{classDataList.2}}"></td>
+		 </tr>
+		 <tr>
+			 <td class="label"><p>Starting Time:</p></td>
+			 <td class="field"><SELECT name="starthour" id="starthour" class="time" onchange="timeComparer()">
+				{% for hs in hourList %}
+					<OPTION value="{{hs}}" {% if hs == classDataList.3 %} selected {% endif %}>{{hs}}</OPTION>
+				{% endfor %}
+			</SELECT>
+			<SELECT name="startminute" id="startminute" class="time" onchange="timeComparer()">
+				{% for ms in minuteList %}
+					<OPTION value="{{ms}}" {% if ms == classDataList.4 %} selected {% endif %}>{{ms}}</OPTION>
+				{% endfor %}
+			</SELECT></td>
+		 </tr>
+		 <tr>
+			 <td class="label"><p>Ending Time:</p></td>
+			 <td class="field"><SELECT name="endhour" id="endhour" class="time" onchange="timeComparer()">
+				{% for he in hourList %}
+					<OPTION value="{{he}}" {% if he == classDataList.5 %} selected {% endif %}>{{he}}</OPTION>
+				{% endfor %}
+			</SELECT>
+			<SELECT name="endminute" id="endminute" class="time" onchange="timeComparer()">
+				{% for me in minuteList %}
+					<OPTION value="{{me}}" {% if me == classDataList.6 %} selected {% endif %}>{{me}}</OPTION>
+				{% endfor %}
+			</SELECT></td>
+			<script>
+				function timeComparer(){
+					var input1 = parseInt(document.getElementById('starthour').value, 10);
+    				var input2 = parseInt(document.getElementById('startminute').value, 10);
+    				var input3 = parseInt(document.getElementById('endhour').value, 10);
+    				var input4 = parseInt(document.getElementById('endminute').value, 10);
+					if (input1 > input3){
+						document.getElementById('timecompare').textContent = "Start time before end time.";
+						document.getElementById('submitbutton').disabled = true;
+					} else {
+						if ((input2 > input4) && (input1 == input3)){
+							document.getElementById('timecompare').textContent = "Start time before end time.";
+							document.getElementById('submitbutton').disabled = true;
+						} else {
+							if ((input2 == input4) && (input1 == input3)){
+								document.getElementById('timecompare').textContent = "Start time must be different from end time.";
+								document.getElementById('submitbutton').disabled = true;
+							} else {
+								document.getElementById('timecompare').textContent = "";
+								document.getElementById('submitbutton').disabled = false;
+							}
+						}
+					}
+				}
+			</script>
+		 </tr>
+		<br>
+		<tr>
+			<td><input name="classdeletebutton" id="classdeletebutton" type="submit" class="button" value="Delete class" /></td>
+			<td><input name="classsubmitbutton" id="classsubmitbutton" type="submit" class="button" value="Modify class" /></td>
+		</tr>
+  	</table>
+</form>
+<br>
+<p id="timecompare"></p>
+
+
+{% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
+</center>
+{% for message in get_flashed_messages() %}
+	<center>
+	    <p>{{ message }}</p>
+	</center>
+{% endfor %}
+		
+{% endblock content %}

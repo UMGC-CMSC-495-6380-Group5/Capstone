@@ -1,9 +1,67 @@
 <!--
 DATE 			TEAM MEMBER 	UPDATE
-10/08/2020 		DROBERTS 		Created initial file.
+10/10/2020 		TFEITOSA 		Built Attendance Interface.
 -->
 
 {% extends "layout.html" %}
 {% block content %}
+<center>
+    <h1>Attendance</h1>
+    <br>
+    <table>
+        <tr>
+            <td style="text-align:center;"><h2>{{class_name}}</h2></td>
+        </tr>
+        <tr>
+            <td style="text-align:center;"><h2>{{class_date}}</h2></td>
+        </tr>
+    </table>
+    <form action="" method="POST">
+        <table>
+            <tr>
+                <td style="text-align:center;"><h3>Students</h3></td>
+            </tr>
+            <tr>
+                <td class="field">
+                    <SELECT id="students" multiple size="15" onchange="getValues()">
+    			        <OPTION value=" "></OPTION>
+    				    {% for a in accountList %}
+    					<OPTION value={{a.0}}>{{a.2}}, {{a.1}}</OPTION>
+    				    {% endfor %}
+    			    </SELECT>
+    			</td>
+    			
+    		</tr>
+            
+			<tr>
+			    <td><input name="confirm" id="confirm" type="submit" value="Confirm" /></td>
+			</tr>
+        </table>
+    </form>
+</center>
+
+<script>
+    function getValues() {
+        //const selected = document.querySelectorAll('#students option:checked');
+        //const values = Array.from(selected).map(el => el.value);
+        //return values;
+        
+        var selectedValues = Array.from(document.getElementById('students').selectedOptions).map(el=>el.value);
+        //document.getElementById('selected').textContent = selectedValues;
+        
+        
+    }
+</script>
+
+{% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
+</center>
+{% for message in get_flashed_messages() %}
+	<center>
+	    <p>{{ message }}</p>
+	</center>
+{% endfor %}
+
 
 {% endblock content %}

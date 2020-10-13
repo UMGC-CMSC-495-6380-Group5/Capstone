@@ -2,6 +2,7 @@
 DATE 			TEAM MEMBER    	UPDATE
 //				TFEITOSA 		Created style.css
 09/29/2020    	NCROWN         	Updated to include revision table
+10/10/2020		TFEITOSA 		Formatted Layout, menu, calendar
 
 */
 
@@ -11,7 +12,7 @@ body {
 
 .container {
 	width: 90%;
-	min-width: 720px;
+	min-width: 900px;
 	margin-right: auto;
 	margin-left: auto;
 	min-height: 720px;
@@ -26,7 +27,6 @@ body {
 	max-width: 100%;
 	margin-right: auto;
 	margin-left: auto;
-	min-width:1000px;
 	background: #000;
 	margin-bottom: 30px;
 
@@ -36,11 +36,11 @@ body {
 .dropbtn {
   	background-color: #c33;
   	color: white;
-	width: 140px;
-	padding-top: 12px;
-	padding-bottom: 12px;
+	width: 120px;
+	padding-top: 6px;
+	padding-bottom: 6px;
 	margin-left: 12px;
-  	font-size: 22px;
+  	font-size: 18px;
   	
 }
 
@@ -52,13 +52,13 @@ body {
 .dropdown {
   	position: relative;
   	display: inline-block;
-	height: 128px;
+	height: 58px;
 	
 }
 
 .logo {
 	position: relative;
-	float: left;
+	
 }
 
 
@@ -99,12 +99,7 @@ body {
 
 /* General Tables */
 /*
-table{
-	width: 100%;
-	margin: 0 auto;
-	
-	
-}
+
 
 th {
     border: 1px solid black;
@@ -123,17 +118,31 @@ th {
     width: 300px;
 }
 */
-#attendance {
-    height: 360px;
+#day {
+	min-height: 560px;
+	background: #faa;
+	padding-left: 30px;
+	padding-right: 60px;
+	position: relative;
+	float: right;
+	resize:both;
+    overflow:auto;
+	
 }
 
 #calendar {
 	width: 70%;
 	float: left;
-	min-height: 720;
+	min-height: 560px;
 	background: #ccc;
 	position: relative;
 
+}
+
+.statstable {
+	width: 100%;
+	margin: 0 auto;
+	
 }
 
 .stats {
@@ -141,26 +150,20 @@ th {
 	padding-bottom: 10px;
 }
 
-#day {
-	
-	float: left;
-	min-height: 720;
-	background: #faa;
-	position: relative;
-	padding-left: 30px;
-	padding-right: 60px;
-}
 
 #calendar_table {
 	width: 100%;
+	
 }
 
-#calendar_table caption {
-	background: #c33;
+#calendar_table td {
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
 }
 
 #year {
-	width: 100%;
+	
 	font-size: 2em;
 }
 
@@ -169,16 +172,22 @@ th {
 }
 
 #left_arrow {
-	margin-right: 2em;
-	font-size: 3em;
-	
+	margin: auto;
+	display:block;
 }
 #right_arrow {
-	margin-left: 2em;
-	font-size: 3em;
-	
+	margin: auto;
+	display:block;
 }
 
 #calendar_content {
 	text-align: center;
 }
+
+#calendar_content td {
+	
+	margin: 0 auto;	
+}
+
+
+

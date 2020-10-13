@@ -3,7 +3,8 @@ DATE 			TEAM MEMBER 	UPDATE
 //		 		TFEITOSA		Created layout.html file
 10/03/2020 		NCROWN 			Updated to include logout button and revision table
 10/05/2020 		NCROWN 			Updated to include mapping to newaccount
-
+10/08/2020  	NCROWN 			Added mapping to modify/delete accounts and classes
+10/10/2020 		TFEITOSA 		Removed searchbar code for UI cleanup
 -->
 
 <!DOCTYPE html>
@@ -19,6 +20,7 @@ DATE 			TEAM MEMBER 	UPDATE
     <body>
         <div class="container">
             <div class="menu">
+            	<center>
                 <div class="logo">
 					<img src={{ url_for('static',filename='images/logob.png') }} name="logo" id="logo">
 				</div>
@@ -28,22 +30,23 @@ DATE 			TEAM MEMBER 	UPDATE
 				<div class="dropdown">
 					<button class="dropbtn">Accounts</button>
 					<div class="dropdown-content">
-					  	<a href="newaccount">New</a>
+					  	<a href="newaccount">New Account</a>
 					  	<a href="listaccounts">Modify/Delete</a>
-					  	<input type="text" placeholder="Search...">
+					  	
 					</div>
 				</div>
 				<div class="dropdown">
-					<button class="dropbtn">Class</button>
+					<button class="dropbtn">Classes</button>
 					<div class="dropdown-content">
-					  	<a href="newclass">New</a>
+					  	<a href="newclass">New Class</a>
 					  	<a href="listclasses">Modify/Delete</a>
-					  	<input type="text" placeholder="Search...">
+					  	
 					</div>
 				</div>
 				<div class="dropdown">
 					<button class="dropbtn"><a href="logout">Logout</a></button>
 				</div>
+				</center>
             </div>
         	<div class="content">
 				{% block content %}

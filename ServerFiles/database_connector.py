@@ -4,6 +4,8 @@
 #10/06/2020     NCROWN              Added function to disconnect the database
 
 import mysql.connector
+import flask_excel as excel
+
 
 #Connecting to the database
 def ConnectDB():
@@ -19,4 +21,3 @@ def ConnectDB():
 def DisconnectDB(cursor, connection):
     cursor.close()
     connection.close()
-    

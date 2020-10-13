@@ -1,6 +1,8 @@
 #DATE           TEAM MEMBER         UPDATE
 #10/05/2020     TFEITOSA            Created app_calendar.py
 #10/03/2020     NCROWN              Updated to include revision table
+#10/07/2020     TFEITOSA            Worked on calendar interface
+#10/08/2020     TFEITOSA            Worked on calendar interface
 
 from datetime import date
 from database_connector import ConnectDB
@@ -22,7 +24,7 @@ def get_month_name():
     month_name = today.strftime("%B")
     return month_name
 
-def get_day():
+def get_today():
     day = int(today.strftime("%d"))
     return day
     
@@ -73,14 +75,23 @@ def get_all_classes_TESTING():
     except OSError:
         result = "Error Total"
     return result
-
-def do_query():
-    query = "TYPE acctlist IS VARRAY(99) OF NUMBER;"
+    
+def get_classes_today():
+    query = "SELECT * FROM Classes WHERE ClassDate = %s"
+    
     try:
         mydb = ConnectDB()
         conn = mydb.cursor()
-        conn.execute(query)
+        conn.execute(query, (today,))
+        result = conn.fetchall()
     except OSError:
-        result = "Error"
-        
+        result = "Error Total"
+    return result
+
+def get_new_accounts():
+    month = today.strftime("%m")
+    query = "SELECT COUNT(*) FROM Classes WHERE month_created = "
+    
+def get_dropped_accounts():
+    month = today.strftime("%m")
     

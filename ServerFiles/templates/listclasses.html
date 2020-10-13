@@ -1,7 +1,8 @@
 <!--
 DATE 			TEAM MEMBER 	UPDATE
 10/08/2020 		NCROWN 			Created listclasses.html file
-
+10/09/2020 		NCROWN 			Added javascript to prevent submission of blank selection
+10/10/2020 		TFEITOSA 		Added button handling for attendance
 -->
 
 {% extends "layout.html" %}
@@ -13,13 +14,26 @@ DATE 			TEAM MEMBER 	UPDATE
 			<span>Select a class to modify:</span>
 		</caption>
 		<tr>
-			<td class="field"><SELECT name="account" id="account" >
-			        <OPTION value=""></OPTION>
-				{% for h in classList %}
-					<OPTION value="{{h.0}}">Class name: {{h.1}}  Date: {{h.2}}  Start time: {{h.3}}</OPTION>
+			<td class="field"><SELECT name="classes" id="classes" onchange="inputCheck()">
+			        <OPTION value=" "></OPTION>
+				{% for c in classList %}
+					<OPTION value="{{c.0}}">Class name: {{c.1}} &nbsp;&nbsp;&nbsp; Date: {{c.2}} &nbsp;&nbsp;&nbsp; Start time: {{c.3}} &nbsp;&nbsp;&nbsp; End time: {{c.4}}</OPTION>
 				{% endfor %}
 			</SELECT></td>
-			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Select class" /></td>
+			<script>
+			function inputCheck(){
+				var input = document.getElementById('classes').value;
+				if (input == " "){
+					document.getElementById('submitbutton').disabled = true;
+					document.getElementById('attendance').disabled = true;
+				} else {
+					document.getElementById('submitbutton').disabled = false;
+					document.getElementById('attendance').disabled = false;
+				}
+			}
+			</script>
+			<td><input name="submitbutton" id="submitbutton" type="submit" class="button" value="Modify class" disabled></td>
+			<td><input name="attendance" id="attendance" type="submit" class="button" value="Take Attendance" disabled></td>
 		</tr>
 	</table>
 </form>
